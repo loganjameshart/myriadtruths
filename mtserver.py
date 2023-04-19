@@ -1,9 +1,8 @@
-import argparse
 import socket
-import subprocess
 import os
 import sys
 
+# creating constants
 SYSTEM = sys.platform
 USER = os.getlogin()
 HOSTNAME = socket.gethostname()
@@ -11,7 +10,6 @@ HOSTADDRESS = socket.gethostbyname(HOSTNAME)
 
 
 # function definitions
-
 def username():
 	'''Returns username.'''
 	return os.getlogin()
@@ -20,16 +18,17 @@ def peep(directory):
 	'''Returns directory as list.'''
 	return os.listdir(directory)
 
+
 # make listening server
 server = socket.socket()
 server.bind((HOSTADDRESS,6666))
-server.listen()
+server.listen(1)
 print('Awaiting connection...')
 conn, addr = server.accept()
 
+# once connected, creates the interactive shell session 
 if conn:
 	conn.sendall(f'Welcome to the shell on {USER}'.encode())
-	
 	while True:
 		if not conn:
 			break
@@ -48,7 +47,7 @@ Please select a command.
 		print(f'Executing {command}.')
 		
 		if 'quit' in command.lower():
-			conn.sendall(b'Ending connection. See you in hell.\n')
+			conn.sendall(b'Ending connection.\n')
 			conn.close()
 			break
 		elif 'system' in command.lower():
@@ -85,9 +84,3 @@ Please select a command.
 			continue
 			
 server.close()
-			
-			
-
-	
-
-
